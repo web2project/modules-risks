@@ -1,0 +1,15 @@
+The Risk Management Module was built by CaseySoftware, LLC and is 
+released here under the Clear BSD license
+
+Copyright (c) 2004-2011 CaseySoftware, LLC <webmaster@caseysoftware.com>
+
+Special credit and acknowledgement goes to:
+
+- web2project Development Team member Keith Casey
+<caseydk@users.sourceforge.net>, CEO of CaseySoftware in implementing 
+permissions, making releases available, and almost all development since the 
+initial v1.0 for dotProject;
+
+- dotProject Development Team Member Ivan Peevski
+<cyberhorse@users.sourceforge.net> for his work for CaseySoftware in making
+the original v1.0 for dotProject happen;
