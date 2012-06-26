@@ -1,6 +1,6 @@
 <?php
 
-class CRiskNote extends w2p_Core_BaseObject {
+class CRisk_Note extends w2p_Core_BaseObject {
     public $risk_note_id = null;
     public $risk_note_risk = null;
     public $risk_note_creator = null;
@@ -8,7 +8,7 @@ class CRiskNote extends w2p_Core_BaseObject {
     public $risk_note_description = '';
 
 	public function __construct() {
-		parent::__construct('risk_notes', 'risk_note_id');
+		parent::__construct('risk_notes', 'risk_note_id', 'risks');
 	}
 
     public function check() {
@@ -32,7 +32,7 @@ class CRiskNote extends w2p_Core_BaseObject {
           return $errorMsgArray;
         }
 
-        $q = new DBQuery;
+        $q = $this->_getQuery();
         $this->risk_note_date = $q->dbfnNowWithTZ();
         $this->risk_note_creator = $AppUI->user_id;
 
@@ -52,25 +52,12 @@ class CRiskNote extends w2p_Core_BaseObject {
         return $stored;
 	}
 
-	public function delete(CAppUI $AppUI) {
-        $perms = $AppUI->acl();
-
-        if ($perms->checkModuleItem('risks', 'delete', $this->risk_id)) {
-          if ($msg = parent::delete()) {
-              return $msg;
-          }
-          return true;
-        }
-        return false;
-	}
-
     public function getNotes(CAppUI $AppUI) {
         $results = array();
         $perms =& $AppUI->acl();
 
         if ($perms->checkModuleItem('risks', 'view', $this->risk_id)) {
-            $q = new DBQuery();
-            $q->clear();
+            $q = $this->_getQuery();
             $q->addQuery('risk_notes.*');
             $q->addQuery("CONCAT(contact_first_name, ' ', contact_last_name) as risk_note_owner");
             $q->addTable('risk_notes');
