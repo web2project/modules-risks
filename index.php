@@ -14,7 +14,7 @@ $riskStatus = array(-1 => $AppUI->_('All Risks')) + w2PgetSysVal('RiskStatus');
 $durnTypes = array(1=>'Hours', 24=>'Days', 168=>'Weeks');
 
 // setup the title block
-$titleBlock = new CTitleBlock( 'Risks', 'scales.png', $m, $m.$a );
+$titleBlock = new w2p_Theme_TitleBlock( 'Risks', 'scales.png', $m, $m.$a );
 // Use permissions check directly rather than $canEdit, because this 
 // file can be included by other modules, in which case the $canEdit will
 // have a different context.

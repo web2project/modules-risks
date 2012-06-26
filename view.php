@@ -38,7 +38,7 @@ if (!$risk) {
 }
 
 // setup the title block
-$titleBlock = new CTitleBlock('View Risk', 'scales.png', $m, $m . '.' . $a);
+$titleBlock = new w2p_Theme_TitleBlock('View Risk', 'scales.png', $m, $m . '.' . $a);
 $titleBlock->addCell();
 if ($canAdd) {
     $titleBlock->addCell('<input type="submit" class="button" value="' . $AppUI->_('new risk') . '" />', '', '<form action="?m=risks&amp;a=addedit" method="post" accept-charset="utf-8">', '</form>');

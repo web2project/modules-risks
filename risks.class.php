@@ -22,7 +22,7 @@ class CRisk extends w2p_Core_BaseObject {
     public function loadFull(CAppUI $AppUI, $risksId) {
         global $AppUI;
 
-        $q = new DBQuery;
+        $q = $this->_getQuery();
         $q->addTable('risks', 'r');
         $q->addQuery('r.*');
         $q->addQuery('p.project_name, p.project_color_identifier');
@@ -65,7 +65,7 @@ class CRisk extends w2p_Core_BaseObject {
           return $errorMsgArray;
         }
 
-        $q = new DBQuery;
+        $q = $this->_getQuery();
         $this->risk_updated = $q->dbfnNowWithTZ();
         $this->risk_mitigation_date = (2 == $this->risk_status) ? $q->dbfnNowWithTZ() : '';
 //echo '<pre>'; print_r($this); die();
@@ -103,7 +103,7 @@ class CRisk extends w2p_Core_BaseObject {
         $perms = $AppUI->acl();
 
         if ($perms->checkModuleItem('risks', 'access')) {
-            $q = new w2p_Database_Query();
+            $q = $this->_getQuery();
             $q->addQuery('risks.*');
             $q->addTable('risks');
             if ($status > -1) {
@@ -136,8 +136,7 @@ class CRisk extends w2p_Core_BaseObject {
         $perms =& $AppUI->acl();
 
         if ($perms->checkModuleItem('risks', 'view', $this->risk_id)) {
-            $q = new DBQuery();
-            $q->clear();
+            $q = $this->_getQuery();
             $q->addQuery('risk_notes.*');
             $q->addQuery("CONCAT(contact_first_name, ' ', contact_last_name) as risk_note_owner");
             $q->addTable('risk_notes');
@@ -168,7 +167,7 @@ class CRisk extends w2p_Core_BaseObject {
         $perms = $AppUI->acl();
 
         if ($perms->checkModule('tasks', 'view')) {
-            $q = new DBQuery();
+            $q = $this->_getQuery();
             $q->addQuery('t.task_id, t.task_name');
             $q->addTable('tasks', 't');
             $q->addWhere('task_project = ' . (int) $projectId);

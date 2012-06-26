@@ -41,7 +41,7 @@ $users = $perms->getPermittedUsers('risks');
 
 // setup the title block
 $ttl = $risk_id ? 'Edit Risk' : 'Add Risk';
-$titleBlock = new CTitleBlock($AppUI->_($ttl), 'scales.png', $m, $m . '.' . $a);
+$titleBlock = new w2p_Theme_TitleBlock($AppUI->_($ttl), 'scales.png', $m, $m . '.' . $a);
 $titleBlock->addCrumb('?m=' . $m, 'risks list');
 $canDelete = $perms->checkModuleItem($m, 'delete', $risk_id);
 if ($canDelete && $risk_id) {
