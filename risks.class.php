@@ -164,7 +164,7 @@ class CRisk extends w2p_Core_BaseObject {
         $search['table_alias'] = 'r';
         $search['table_module'] = 'risks';
         $search['table_key'] = $search['table_alias'].'.risk_id'; // primary key in searched table
-        $search['table_link'] = 'index.php?m=risks&amp;risk_id='; // first part of link
+        $search['table_link'] = 'index.php?m=risks&a=view&risk_id='; // first part of link
         $search['table_title'] = 'Risks';
         $search['table_orderby'] = 'risk_name';
         $search['search_fields'] = array('risk_name', 'risk_description', 'risk_note_description');
