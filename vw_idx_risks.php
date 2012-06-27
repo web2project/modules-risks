@@ -3,7 +3,10 @@ if (!defined('W2P_BASE_DIR')) {
     die('You should not access this file directly.');
 }
 
-global $AppUI, $project_id, $task_id, $tab;
+global $AppUI, $task_id, $tab;
+
+$project_id = (int) w2PgetParam($_GET, 'project_id', 0);
+
 $tab--;
 $df = $AppUI->getPref('SHDATEFORMAT');
 $riskProbability = w2PgetSysVal( 'RiskProbability' );
@@ -11,7 +14,7 @@ $riskImpact = w2PgetSysVal( 'RiskImpact' );
 $riskStatus = w2PgetSysVal( 'RiskStatus' );
 
 $risk = new CRisk();
-$risks = $risk->getRisksByProject($AppUI, $project_id, $tab--);
+$risks = $risk->getRisksByProject($project_id, $tab--);
 ?>
 <table border="0" width="100%" cellspacing="1" cellpadding="2" class="tbl">
 	<tr bgcolor="#99CCFF" align="center" valign="top">

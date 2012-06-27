@@ -8,7 +8,7 @@ if (!$perms->checkModuleItem($m, 'access')) {
     $AppUI->redirect('m=public&a=access_denied');
 }
 
-$tab = (int) w2PgetParam($_GET, 'tab', 0);
+$tab = $AppUI->processIntState('risksIdxTab', $_GET, 'tab', 0);
 
 $riskStatus = array(-1 => $AppUI->_('All Risks')) + w2PgetSysVal('RiskStatus');
 $durnTypes = array(1=>'Hours', 24=>'Days', 168=>'Weeks');

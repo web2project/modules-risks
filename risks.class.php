@@ -98,38 +98,16 @@ class CRisk extends w2p_Core_BaseObject {
         return false;
 	}
 
-    public function getRisksByProject(CAppUI $AppUI, $project_id, $status = -1) {
-        $results = array();
-        $perms = $AppUI->acl();
-
-        if ($perms->checkModuleItem('risks', 'access')) {
-            $q = $this->_getQuery();
-            $q->addQuery('risks.*');
-            $q->addTable('risks');
-            if ($status > -1) {
-                $q->addWhere('risk_status = ' . $status);
-            }
-
-            $q->addQuery('p.project_id, project_name, project_color_identifier');
-            $q->leftJoin('projects', 'p', 'p.project_id = risk_project');
-            $projObj = new CProject();
-            $projObj->setAllowedSQL($AppUI->user_id, $q, null, 'p');
-            if ((int) $project_id) {
-                $q->addWhere('risk_project = ' . $project_id);
-            }
-
-            $q->addQuery('task_id, task_name');
-            $q->leftJoin('tasks', 't', 'task_id = risk_task');
-
-            $q->leftJoin('users', 'u', 'user_id = risk_owner');
-            $q->addQuery('contact_order_by as owner_name');
-            $q->leftJoin('contacts', 'c', 'contact_id = user_contact');
-
-            $results = $q->loadList();
+    public function getRisksByProject($project_id, $status = -1) {
+        $q = $this->_getQuery();
+        $q->addQuery('r.*');
+        $q->addTable('risks', 'r');
+        if ($status > -1) {
+            $q->addWhere('r.risk_status = ' . $status);
         }
 
-        return $results;
-    }
+        $q->addQuery('p.project_id, p.project_name, p.project_color_identifier, p.project_company');
+        $q->leftJoin('projects', 'p', 'p.project_id = r.risk_project');
 
     public function getNotes(CAppUI $AppUI) {
         $results = array();
@@ -144,6 +122,10 @@ class CRisk extends w2p_Core_BaseObject {
             $q->leftJoin('contacts', 'c', 'user_contact = contact_id');
             $q->addWhere('risk_note_risk = ' . (int) $this->risk_id);
             $results = $q->loadList();
+        $projObj = new CProject();
+        $projObj->setAllowedSQL($this->_AppUI->user_id, $q, null, 'p');
+        if ($project_id > 0 && $this->_perms->checkModuleItem('projects', 'view', $project_id)) {
+            $q->addWhere("r.risk_project = $project_id");
         }
 
         return $results;
@@ -174,6 +156,7 @@ class CRisk extends w2p_Core_BaseObject {
             $results = $q->loadHashList('task_id');
         }
         return $results;
+        return $q->loadList();
     }
 
     public function hook_search() {
