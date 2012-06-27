@@ -2,26 +2,12 @@
 if (!defined('W2P_BASE_DIR')) {
 	die('You should not access this file directly.');
 }
-include W2P_BASE_DIR . '/modules/risks/risknotes.class.php';
 
-$del = 0;
-$obj = new CRiskNote();
-if (!$obj->bind($_POST)) {
-    $AppUI->setMsg($obj->getError(), UI_MSG_ERROR);
-    $AppUI->redirect();
-}
+$risk_id = (int) w2PgetParam($_GET, 'risk_note_risk', 0);
 
-$action = ($del) ? 'deleted' : 'stored';
-$result = ($del) ? $obj->delete($AppUI) : $obj->store($AppUI);
+$controller = new w2p_Controllers_Base(
+                    new CRisk_Note(), false, 'Risk Note', 'm=risks', 'm=risks&a=view&risk_id=' . $risk_id
+                  );
 
-if (is_array($result)) {
-    $AppUI->setMsg($result, UI_MSG_ERROR, true);
-    $AppUI->holdObject($obj);
-    $AppUI->redirect('m=risks&a=view&risk_id='.$obj->risk_note_id);
-}
-if ($result) {
-    $AppUI->setMsg('Risks '.$action, UI_MSG_OK, true);
-    $AppUI->redirect('m=risks');
-} else {
-    $AppUI->redirect('m=public&a=access_denied');
-}
+$AppUI = $controller->process($AppUI, $_POST);
+$AppUI->redirect($controller->resultPath);
