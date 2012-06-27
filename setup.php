@@ -19,13 +19,11 @@ $config['permissions_item_table'] = 'risks';
 $config['permissions_item_field'] = 'risk_id';
 $config['permissions_item_label'] = 'risk_name';
 
-class CSetupRisks
+class CSetupRisks extends w2p_Core_Setup
 {
     public function install()
     {
-		global $AppUI;
-
-        $q = new DBQuery();
+		$q = $this->_getQuery();
 		$q->createTable('risks');
 		$sql = '(
             `risk_id` int(10) unsigned NOT NULL auto_increment,
@@ -44,7 +42,7 @@ class CSetupRisks
             `risk_duration_type` tinyint(10) default 1,
             `risk_notes` text,
             PRIMARY KEY  (`risk_id`))
-            TYPE=MyISAM';
+            ENGINE = MYISAM DEFAULT CHARSET=utf8 ';
 		$q->createDefinition($sql);
 		$q->exec();
 
@@ -57,94 +55,76 @@ class CSetupRisks
             `risk_note_date` datetime NOT NULL default \'0000-00-00 00:00:00\',
             `risk_note_description` text NOT NULL,
             PRIMARY KEY  (`risk_note_id`))
-            TYPE=MyISAM';
+            ENGINE = MYISAM DEFAULT CHARSET=utf8 ';
 		$q->createDefinition($sql);
 		$q->exec();
-		
-		$q->clear();
-		$q->addTable('sysvals');
-		$q->addInsert('sysval_title', 'RiskImpact');
-		$q->addInsert('sysval_key_id', 1);
-		$q->addInsert('sysval_value', "Not Specified");
-        $q->addInsert('sysval_value_id', 0);
-		$q->exec();
-        $q->addInsert('sysval_value', "Low");
-        $q->addInsert('sysval_value_id', 1);
-        $q->exec();
-        $q->addInsert('sysval_value', "Medium");
-        $q->addInsert('sysval_value_id', 2);
-        $q->exec();
-        $q->addInsert('sysval_value', "High");
-        $q->addInsert('sysval_value_id', 3);
-        $q->exec();
-        $q->addInsert('sysval_value', "Super High");
-        $q->addInsert('sysval_value_id', 4);
-        $q->exec();
 
-		$q->clear();
-		$q->addTable('sysvals');
-		$q->addInsert('sysval_title', 'RiskProbability');
-		$q->addInsert('sysval_key_id', 1);
-		$q->addInsert('sysval_value', "Not Specified");
-        $q->addInsert('sysval_value_id', 0);
-		$q->exec();
-        $q->addInsert('sysval_value', "Low");
-        $q->addInsert('sysval_value_id', 1);
-        $q->exec();
-        $q->addInsert('sysval_value', "Medium");
-        $q->addInsert('sysval_value_id', 2);
-        $q->exec();
-        $q->addInsert('sysval_value', "High");
-        $q->addInsert('sysval_value_id', 3);
-        $q->exec();
+        $i = 0;
+        $impacts = array('Not Specified', 'Low', 'Medium', 'High', 'Super High');
+        foreach ($impacts as $impact) {
+            $q->clear();
+            $q->addTable('sysvals');
+            $q->addInsert('sysval_key_id', 1);
+            $q->addInsert('sysval_title', 'RiskImpact');
+            $q->addInsert('sysval_value', $impact);
+            $q->addInsert('sysval_value_id', $i);
+            $q->exec();
+            $i++;
+        }
 
-		$q->clear();
-		$q->addTable('sysvals');
-		$q->addInsert('sysval_title', 'RiskStatus');
-		$q->addInsert('sysval_key_id', 1);
-		$q->addInsert('sysval_value', "Not Specified");
-        $q->addInsert('sysval_value_id', 0);
-        $q->exec();
-        $q->addInsert('sysval_value', "Open");
-        $q->addInsert('sysval_value_id', 1);
-        $q->exec();
-        $q->addInsert('sysval_value', "Closed");
-        $q->addInsert('sysval_value_id', 2);
-        $q->exec();
-        $q->addInsert('sysval_value', "Not Applicable");
-        $q->addInsert('sysval_value_id', 3);
-        $q->exec();
+        $i = 0;
+        $probabilities = array('Not Specified', 'Low', 'Medium', 'High');
+        foreach ($probabilities as $probability) {
+            $q->clear();
+            $q->addTable('sysvals');
+            $q->addInsert('sysval_key_id', 1);
+            $q->addInsert('sysval_title', 'RiskProbability');
+            $q->addInsert('sysval_value', $probability);
+            $q->addInsert('sysval_value_id', $i);
+            $q->exec();
+            $i++;
+        }
 
-        $perms = $AppUI->acl();
-        return $perms->registerModule('Risks', 'risks');
-	}
+        $i = 0;
+        $statii = array('Not Specified', 'Open', 'Closed', 'Not Applicable');
+        foreach ($statii as $status) {
+            $q->clear();
+            $q->addTable('sysvals');
+            $q->addInsert('sysval_key_id', 1);
+            $q->addInsert('sysval_title', 'RiskStatus');
+            $q->addInsert('sysval_value', $status);
+            $q->addInsert('sysval_value_id', $i);
+            $q->exec();
+            $i++;
+        }
 
-	public function upgrade($old_version)
-	{
-		switch ($old_version) {
-			default:
-				//do nothing
-		}
-		return true;
+        return parent::install();
 	}
 
 	public function remove()
     {
-        global $AppUI;
-
-        $q = new DBQuery;
+        $q = $this->_getQuery();
 		$q->dropTable('risks');
 		$q->exec();
 		$q->clear();
 		$q->dropTable('risk_notes');
 		$q->exec();
 
-        $q->clear();
+		$q->clear();
 		$q->setDelete('sysvals');
-		$q->addWhere("sysval_title LIKE 'Risk%'");
-		$q->exec();
+		$q->addWhere("sysval_title = 'RiskImpact'");
+        $q->exec();
 
-        $perms = $AppUI->acl();
-        return $perms->unregisterModule('risks');
+		$q->clear();
+		$q->setDelete('sysvals');
+		$q->addWhere("sysval_title = 'RiskProbability'");
+        $q->exec();
+
+		$q->clear();
+		$q->setDelete('sysvals');
+		$q->addWhere("sysval_title = 'RiskStatus'");
+        $q->exec();
+
+        return parent::remove();
 	}
 }
