@@ -36,22 +36,22 @@ class CRisk extends w2p_Core_BaseObject {
         $q->loadObject($this, true, false);
     }
 
-    public function check() {
-        $errorArray = array();
+    public function isValid()
+    {
         $baseErrorMsg = get_class($this) . '::store-check failed - ';
 
         if ('' == trim($this->risk_name)) {
-            $errorArray['risk_name'] = $baseErrorMsg . 'risk name is not set';
+            $this->_error['risk_name'] = $baseErrorMsg . 'risk name is not set';
         }
-        if ('' == trim($this->risk_description)) {
-            $errorArray['risk_description'] = $baseErrorMsg . 'risk description is not set';
+        if (7 >= strlen(trim($this->risk_description))) {
+            $this->_error['risk_description'] = $baseErrorMsg . 'risk description is not set';
         }
         if (0 == (int) $this->risk_owner) {
-            $errorArray['risk_owner'] = $baseErrorMsg . 'risk owner is not set';
+            $this->_error['risk_owner'] = $baseErrorMsg . 'risk owner is not set';
         }
 
-        return $errorArray;
-	}
+        return (count($this->_error)) ? false : true;
+    }
 
 	public function store()
     {
@@ -66,18 +66,13 @@ class CRisk extends w2p_Core_BaseObject {
         $q = $this->_getQuery();
         $this->risk_updated = $q->dbfnNowWithTZ();
         $this->risk_mitigation_date = (2 == $this->risk_status) ? $q->dbfnNowWithTZ() : '';
-        if ($this->risk_id && $perms->checkModuleItem('risks', 'edit', $this->risk_id)) {
-            if (($msg = parent::store())) {
-                return $msg;
-            }
-            $stored = true;
+        $this->risk_owner = $this->_AppUI->user_id;
+        if ($this->{$this->_tbl_key} && $this->canEdit()) {
+            $stored = parent::store();
         }
-        if (0 == $this->risk_id && $perms->checkModuleItem('risks', 'add')) {
+        if (0 == $this->{$this->_tbl_key} && $this->canCreate()) {
             $this->risk_created = $q->dbfnNowWithTZ();
-            if (($msg = parent::store())) {
-                return $msg;
-            }
-            $stored = true;
+            $stored = parent::store();
         }
 
         return $stored;
