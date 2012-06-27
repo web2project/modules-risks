@@ -3,13 +3,15 @@ if (!defined('W2P_BASE_DIR')) {
     die('You should not access this file directly.');
 }
 
-global $AppUI, $risk, $canView;
+global $AppUI, $risk_id, $canView;
 
 if (!$canView) {
 	$AppUI->redirect("m=public&a=access_denied");
 }
 
-$notes = $risk->getNotes($AppUI);
+$note = new CRisk_Note();
+
+$notes = $note->loadAll($order, 'risk_note_risk = '. $risk_id);
 $df = $AppUI->getPref('SHDATEFORMAT');
 $tf = $AppUI->getPref('TIMEFORMAT');
 

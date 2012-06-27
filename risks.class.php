@@ -19,20 +19,18 @@ class CRisk extends w2p_Core_BaseObject {
 		parent::__construct('risks', 'risk_id');
 	}
 
-    public function loadFull(CAppUI $AppUI, $risksId) {
-        global $AppUI;
-
+    public function loadFull($riskId) {
         $q = $this->_getQuery();
         $q->addTable('risks', 'r');
         $q->addQuery('r.*');
         $q->addQuery('p.project_name, p.project_color_identifier');
-        $q->addWhere('risk_id = ' . (int) $risksId);
+        $q->addWhere('risk_id = ' . (int) $riskId);
         $q->leftJoin('projects', 'p', 'project_id = risk_project');
 
         $q->addQuery('t.task_name');
         $q->leftJoin('tasks', 't', 'task_id = risk_task');
 
-        $q->addQuery('CONCAT_WS(\' \',contact_first_name,contact_last_name) as risk_owner_name');
+        $q->addQuery('contact_display_name as risk_owner_name');
 		$q->leftJoin('users', 'u', 'user_id = risk_owner');
 		$q->leftJoin('contacts', 'con', 'contact_id = user_contact');
         $q->loadObject($this, true, false);
@@ -96,53 +94,12 @@ class CRisk extends w2p_Core_BaseObject {
         $q->addQuery('p.project_id, p.project_name, p.project_color_identifier, p.project_company');
         $q->leftJoin('projects', 'p', 'p.project_id = r.risk_project');
 
-    public function getNotes(CAppUI $AppUI) {
-        $results = array();
-        $perms =& $AppUI->acl();
-
-        if ($perms->checkModuleItem('risks', 'view', $this->risk_id)) {
-            $q = $this->_getQuery();
-            $q->addQuery('risk_notes.*');
-            $q->addQuery("CONCAT(contact_first_name, ' ', contact_last_name) as risk_note_owner");
-            $q->addTable('risk_notes');
-            $q->leftJoin('users', 'u', 'risk_note_creator = user_id');
-            $q->leftJoin('contacts', 'c', 'user_contact = contact_id');
-            $q->addWhere('risk_note_risk = ' . (int) $this->risk_id);
-            $results = $q->loadList();
         $projObj = new CProject();
         $projObj->setAllowedSQL($this->_AppUI->user_id, $q, null, 'p');
         if ($project_id > 0 && $this->_perms->checkModuleItem('projects', 'view', $project_id)) {
             $q->addWhere("r.risk_project = $project_id");
         }
 
-        return $results;
-    }
-    public function storeNote(CAppUI $AppUI) {
-        $perms =& $AppUI->acl();
-
-        if ($this->link_id && $perms->checkModuleItem('risks', 'edit', $this->risk_id)) {
-            $q = new DBQuery;
-            $this->risk_note_date = $q->dbfnNow();
-            addHistory('risks', $this->risk_id, 'update', $this->risk_name, $this->risk_id);
-            $stored = true;
-        }
-    }
-    public function deleteNote() {
-        
-    }
-
-    public function getTasks(CAppUI $AppUI, $projectId) {
-        $results = array();
-        $perms = $AppUI->acl();
-
-        if ($perms->checkModule('tasks', 'view')) {
-            $q = $this->_getQuery();
-            $q->addQuery('t.task_id, t.task_name');
-            $q->addTable('tasks', 't');
-            $q->addWhere('task_project = ' . (int) $projectId);
-            $results = $q->loadHashList('task_id');
-        }
-        return $results;
         return $q->loadList();
     }
 
