@@ -15,8 +15,14 @@ if (!$canEdit) {
 	$AppUI->redirect("m=public&a=access_denied");
 }
 ?>
+<script language="javascript" type="text/javascript">
+function submitIt() {
+	var f = document.addeditForm;
+	f.submit();
+}
+</script>
 
-<form name="editFrm" action="?m=risks&amp;a=view&amp;risk_id=<?php echo $risk_id; ?>" method="post">
+<form name="addeditForm" action="?m=risks&amp;a=view&amp;risk_id=<?php echo $risk_id; ?>" method="post">
 	<input type="hidden" name="risk_note_risk" value="<?php echo $risk_id; ?>" />
     <input type="hidden" name="dosql" value="do_risk_note_aed" />
     <table>
@@ -26,7 +32,7 @@ if (!$canEdit) {
                 <textarea name="risk_note_description" class="textarea" cols="50" rows="6"></textarea>
             </td>
             <td valign="top">
-                <input class="text" type="submit" name="note" value="<?php echo $AppUI->_('Add note'); ?>" />
+                <input type="button" class="button" value="<?php echo $AppUI->_('submit'); ?>" onclick="submitIt()" />
             </td>
         </tr>
     </table>
