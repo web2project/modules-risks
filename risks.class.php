@@ -55,9 +55,9 @@ class CRisk extends w2p_Core_BaseObject {
         return $errorArray;
 	}
 
-	public function store(CAppUI $AppUI)
+	public function store()
     {
-        $perms = $AppUI->acl();
+        $perms = $this->_perms;
         $stored = false;
 
         $errorMsgArray = $this->check();
@@ -68,7 +68,6 @@ class CRisk extends w2p_Core_BaseObject {
         $q = $this->_getQuery();
         $this->risk_updated = $q->dbfnNowWithTZ();
         $this->risk_mitigation_date = (2 == $this->risk_status) ? $q->dbfnNowWithTZ() : '';
-//echo '<pre>'; print_r($this); die();
         if ($this->risk_id && $perms->checkModuleItem('risks', 'edit', $this->risk_id)) {
             if (($msg = parent::store())) {
                 return $msg;
@@ -84,18 +83,6 @@ class CRisk extends w2p_Core_BaseObject {
         }
 
         return $stored;
-	}
-
-	public function delete(CAppUI $AppUI) {
-        $perms = $AppUI->acl();
-
-        if ($perms->checkModuleItem('risks', 'delete', $this->risk_id)) {
-          if ($msg = parent::delete()) {
-              return $msg;
-          }
-          return true;
-        }
-        return false;
 	}
 
     public function getRisksByProject($project_id, $status = -1) {
