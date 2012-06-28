@@ -1,5 +1,8 @@
 <?php
 
+/*
+ * TODO: Deleting a Risk should also delete all the attached Risk Notes.
+ */
 class CRisk extends w2p_Core_BaseObject {
 	public $risk_id = 0;
 	public $risk_project = 0;
@@ -43,7 +46,7 @@ class CRisk extends w2p_Core_BaseObject {
         if ('' == trim($this->risk_name)) {
             $this->_error['risk_name'] = $baseErrorMsg . 'risk name is not set';
         }
-        if (7 >= strlen(trim($this->risk_description))) {
+        if ('' == trim($this->risk_description)) {
             $this->_error['risk_description'] = $baseErrorMsg . 'risk description is not set';
         }
         if (0 == (int) $this->risk_owner) {
@@ -53,30 +56,20 @@ class CRisk extends w2p_Core_BaseObject {
         return (count($this->_error)) ? false : true;
     }
 
-	public function store()
-    {
-        $perms = $this->_perms;
-        $stored = false;
-
-        $errorMsgArray = $this->check();
-        if (count($errorMsgArray) > 0) {
-          return $errorMsgArray;
-        }
-
+    protected function hook_preStore() {
         $q = $this->_getQuery();
         $this->risk_updated = $q->dbfnNowWithTZ();
         $this->risk_mitigation_date = (2 == $this->risk_status) ? $q->dbfnNowWithTZ() : '';
         $this->risk_owner = $this->_AppUI->user_id;
-        if ($this->{$this->_tbl_key} && $this->canEdit()) {
-            $stored = parent::store();
-        }
-        if (0 == $this->{$this->_tbl_key} && $this->canCreate()) {
-            $this->risk_created = $q->dbfnNowWithTZ();
-            $stored = parent::store();
-        }
 
-        return $stored;
-	}
+        parent::hook_preStore();
+    }
+
+    protected function hook_preCreate() {
+        $q = $this->_getQuery();
+        $this->risk_created = $q->dbfnNowWithTZ();
+        parent::hook_preCreate();
+    }
 
     public function getRisksByProject($project_id, $status = -1) {
         $q = $this->_getQuery();
