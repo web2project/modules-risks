@@ -29,6 +29,7 @@ if (!$item && $item_id > 0) {
 $riskProbability = w2PgetSysVal( 'RiskProbability' );
 $riskStatus = w2PgetSysVal( 'RiskStatus' );
 $riskImpact = w2PgetSysVal( 'RiskImpact' );
+$priority = w2PgetSysVal('RiskPriority');
 $riskDuration = array(1=>'Hours', 24=>'Days', 168=>'Weeks');
 $users = $perms->getPermittedUsers('risks');
 
@@ -82,7 +83,7 @@ $projects = arrayMerge(array('0' => $AppUI->_('All', UI_OUTPUT_JS)), $projects);
 		<tr>
 			<td align="right"><?php echo $AppUI->_('Risk Priority');?>:</td>
 			<td>
-				<input type="text" class="text" size="5" name="risk_priority" value="<?php echo $item->risk_priority; ?>" maxlength="3">
+                <?php echo arraySelect($priority, 'risk_priority', 'size="1" class="text"', ($item->risk_priority ? $item->risk_priority : 0) , true); ?>
 			</td>
 		</tr>
 		<tr>
