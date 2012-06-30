@@ -105,6 +105,23 @@ class CSetupRisks extends w2p_Core_Setup
         return parent::install();
 	}
 
+	public function upgrade($old_version)
+	{
+        switch ($old_version) {
+            case '1.0':
+                $module = new w2p_Core_Module();
+                $fieldList = array('risk_name', 'risk_priority', 'risk_task', 'risk_probability',
+                    'risk_impact', 'risk_owner', 'risk_status', 'risk_mitigation_date');
+                $fieldNames = array('Name', 'Priority', 'Related Task', 'Probability',
+                    'Impact', 'Owner', 'Status', 'Mitigation Date');
+
+                $module->storeSettings('risks', 'index_list', $fieldList, $fieldNames);
+            default:
+				//do nothing
+		}
+		return true;
+	}
+
 	public function remove()
     {
         $q = $this->_getQuery();

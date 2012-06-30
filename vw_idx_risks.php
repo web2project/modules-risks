@@ -15,20 +15,8 @@ $risks = $risk->getRisksByProject($project_id, $tab--);
 $module = new w2p_Core_Module();
 $fields = $module->loadSettings('risks', 'index_list');
 
-if (count($fields) > 0) {
-    $fieldList = array_keys($fields);
-    $fieldNames = array_values($fields);
-} else {
-    // TODO: This is only in place to provide an pre-upgrade-safe 
-    //   state for versions earlier than v3.0
-    //   At some point at/after v4.0, this should be deprecated
-    $fieldList = array('risk_name', 'risk_priority', 'risk_task', 'risk_probability',
-        'risk_impact', 'risk_owner', 'risk_status', 'risk_mitigation_date');
-    $fieldNames = array('Name', 'Priority', 'Related Task', 'Probability',
-        'Impact', 'Owner', 'Status', 'Mitigation Date');
-
-    $module->storeSettings('risks', 'index_list', $fieldList, $fieldNames);
-}
+$fieldList = array_keys($fields);
+$fieldNames = array_values($fields);
 
 $htmlHelper = new w2p_Output_HTMLHelper($AppUI);
 
