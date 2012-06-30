@@ -1,0 +1,11 @@
+/* 
+    Document   : risks
+    Created on : Jun 30, 2012, 1:32:32 AM
+    Author     : keithcasey
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+._probability, ._impact {
+    text-align: center;
+}

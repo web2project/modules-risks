@@ -26,6 +26,8 @@ $riskStatus = w2PgetSysVal( 'RiskStatus' );
 $customLookups = array('risk_probability' => $riskProbability, 
     'risk_impact' => $riskImpact, 'risk_status' => $riskStatus);
 ?>
+<link rel="stylesheet" type="text/css" href="./modules/risks/risks.css" />
+
 <table width="100%" border="0" cellpadding="2" cellspacing="1" class="tbl list">
     <?php
     foreach ($fieldNames as $index => $name) { ?>
@@ -43,9 +45,7 @@ $customLookups = array('risk_probability' => $riskProbability,
                     <font color="' . bestColor( $row["project_color_identifier"] ) . '">' . $row['project_name'] . '</font>&nbsp</a>
                 </td></tr>';
         }
-//TODO: center probability and impact
 //TODO: when no task is specified, say so
-//TODO: make sure mitigation date works
         echo '<tr>';
         $htmlHelper->stageRowData($row);
         foreach ($fieldList as $index => $column) {
