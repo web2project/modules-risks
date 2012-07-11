@@ -114,16 +114,17 @@ $projects = arrayMerge(array('0' => $AppUI->_('All', UI_OUTPUT_JS)), $projects);
 			<td align="right">&nbsp;&nbsp;<?php echo $AppUI->_('Task');?>:</td>
 			<td>
                 <?php
-//TODO:
-//                $tasks = array();
-//                if ($item->risk_project) {
-//                    $taskList = $item->getTasks($AppUI, $item->risk_project);
-//                    foreach ($taskList as $id => $values) {
-//                        $tasks[$id] = $values['task_name'];
-//                    }
-//                }
-//                $tasks = arrayMerge(array('0' => $AppUI->_('Not Specified', UI_OUTPUT_JS)), $tasks);
-//                echo arraySelect($tasks, 'new_task', 'size="1" class="text"', $item->risk_task);
+                $tasks = array();
+                if ($item->risk_project) {
+                    $task = new CTask();
+                    $taskList = $task->loadAll(null, 'task_project = ' . $item->risk_project);
+//TODO: At some point, we should change this to use the task tree structure
+                    foreach ($taskList as $id => $values) {
+                        $tasks[$id] = $values['task_name'];
+                    }
+                }
+                $tasks = arrayMerge(array('0' => $AppUI->_('Not Specified', UI_OUTPUT_JS)), $tasks);
+                echo arraySelect($tasks, 'new_task', 'size="1" class="text"', $item->risk_task);
                 ?>
             </td>
         </tr>

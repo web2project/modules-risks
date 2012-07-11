@@ -5,6 +5,7 @@ if (!defined('W2P_BASE_DIR')) {
 
 $delete = (int) w2PgetParam($_POST, 'del', 0);
 
+$_POST['risk_task'] = $_POST['new_task'];
 $controller = new w2p_Controllers_Base(
                     new CRisk(), $delete, 'Risks', 'm=risks', 'm=risks&a=addedit'
                   );
