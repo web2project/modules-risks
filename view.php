@@ -17,19 +17,15 @@ if (!$canView) {
 	$AppUI->redirect( "m=public&a=access_denied" );
 } 
 
-$riskProbability = w2PgetSysVal( 'RiskProbability' );
-$riskStatus = w2PgetSysVal( 'RiskStatus' );
-$riskImpact = w2PgetSysVal( 'RiskImpact' );
-$riskDuration = array(1=>'Hours', 24=>'Days', 168=>'Weeks');
 $tab = $AppUI->processIntState('RiskVwTab', $_GET, 'tab', 0);
 $df = $AppUI->getPref('SHDATEFORMAT');
 $tf = $AppUI->getPref('TIMEFORMAT');
 $format = $df . ' ' . $tf;
 
-$risk = new CRisk();
-$risk->loadFull($AppUI, $risk_id);
+$obj = new CRisk();
+$obj->loadFull($AppUI, $risk_id);
 
-if (!$risk) {
+if (!$obj) {
 	$AppUI->setMsg('Risk');
 	$AppUI->setMsg('invalidID', UI_MSG_ERROR, true);
 	$AppUI->redirect();
@@ -51,6 +47,17 @@ if ($canDelete) {
 	$titleBlock->addCrumbDelete('delete risk', $canDelete, $msg);
 }
 $titleBlock->show();
+
+$htmlHelper = new w2p_Output_HTMLHelper($AppUI);
+$htmlHelper->stageRowData($obj);
+
+
+$riskProbability = w2PgetSysVal( 'RiskProbability' );
+$riskStatus = w2PgetSysVal( 'RiskStatus' );
+$riskImpact = w2PgetSysVal( 'RiskImpact' );
+$riskDuration = array(1=>'Hours', 24=>'Days', 168=>'Weeks');
+$customLookups = array('risk_probability' => $riskProbability, 'risk_status' => $riskStatus,
+        'risk_impact' => $riskImpact, 'risk_duration' => $riskDuration);
 ?>
 <script type="text/javascript">
 function delIt(){
@@ -67,81 +74,69 @@ function delIt(){
     <input type="hidden" name="risk_id" value="<?php echo $risk_id; ?>" />
 </form>
 
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="std">
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="std view">
     <tr>
         <td width="50%">
             <table width="100%" cellspacing="1" cellpadding="2">
                 <tr>
                     <td nowrap="nowrap" colspan=2><strong><?php echo $AppUI->_('Details'); ?></strong></td>
                 </tr>
-                <?php if ($risk->risk_project) { ?>
+                <?php if ($obj->risk_project) { ?>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Project');?>:</td>
-                    <td style="background-color:#<?php echo $risk->project_color_identifier; ?>">
-                        <font color="<?php echo bestColor($risk->project_color_identifier); ?>">
-                            <?php echo '<a href="?m=projects&amp;a=view&amp;project_id=' . $risk->risk_project . '">' . htmlspecialchars($risk->project_name, ENT_QUOTES) . '</a>'; ?>
+                    <td style="background-color:#<?php echo $obj->project_color_identifier; ?>">
+                        <font color="<?php echo bestColor($obj->project_color_identifier); ?>">
+                            <?php echo '<a href="?m=projects&amp;a=view&amp;project_id=' . $obj->risk_project . '">' . htmlspecialchars($obj->project_name, ENT_QUOTES) . '</a>'; ?>
                         </font>
                     </td>
                 </tr>
                 <?php } ?>
-                <?php if ($risk->risk_task) { ?>
+                <?php if ($obj->risk_task) { ?>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Task');?>:</td>
                     <td class="hilite">
-                        <?php echo '<a href="?m=projects&amp;a=view&amp;task_id=' . $risk->risk_task . '">' . htmlspecialchars($risk->task_name, ENT_QUOTES) . '</a>'; ?>
+                        <?php echo '<a href="?m=projects&amp;a=view&amp;task_id=' . $obj->risk_task . '">' . htmlspecialchars($obj->task_name, ENT_QUOTES) . '</a>'; ?>
                     </td>
                 </tr>
                 <?php } ?>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Risk Name'); ?>:</td>
-                    <td class="hilite"><strong><?php echo $risk->risk_name; ?></strong></td>
+                    <?php echo $htmlHelper->createCell('risk_name-nolink', $obj->risk_name); ?>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Owner');?>:</td>
-                    <td class="hilite"><?php echo $risk->risk_owner_name;?></td>
+                    <?php echo $htmlHelper->createCell('risk_owner_name-nolink', $obj->risk_owner_name); ?>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Probability'); ?>:</td>
-                    <td class="hilite"><?php echo $riskProbability[$risk->risk_probability]; ?></td>
+                    <?php echo $htmlHelper->createCell('risk_probability', $obj->risk_probability, $customLookups); ?>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Impact'); ?>:</td>
-                    <td class="hilite"><?php echo $riskImpact[$risk->risk_impact]; ?></td>
+                    <?php echo $htmlHelper->createCell('risk_impact', $obj->risk_impact, $customLookups); ?>
                 </tr>
                 <tr>
                     <td align="right"><?php echo $AppUI->_('Risk Priority'); ?>:</td>
-                    <td class="hilite"><?php echo $risk->risk_priority; ?></td>
+                    <?php echo $htmlHelper->createCell('risk_priority', $obj->risk_priority); ?>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Status'); ?>:</td>
-                    <td class="hilite"><?php echo $riskStatus[$risk->risk_status]; ?></td>
+                    <?php echo $htmlHelper->createCell('risk_status', $obj->risk_status, $customLookups); ?>
                 </tr>
                 <tr>
                     <td nowrap="nowrap" colspan="2"><strong><?php echo $AppUI->_('Dates and Targets'); ?></strong></td>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Mitigation Date');?>:</td>
-                    <td class="hilite">
-                        <?php
-                            echo intval( $risk->risk_mitigation_date ) ? $AppUI->formatTZAwareTime($risk->risk_mitigation_date,  $format) : '-';
-                        ?>
-                    </td>
+                    <?php echo $htmlHelper->createCell('risk_mitigation_date', $obj->risk_mitigation_date); ?>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Create Date');?>:</td>
-                    <td class="hilite">
-                        <?php
-                            echo intval( $risk->risk_created ) ? $AppUI->formatTZAwareTime($risk->risk_created, $format) : '-';
-                        ?>
-                    </td>
+                    <?php echo $htmlHelper->createCell('risk_created', $obj->risk_created); ?>
                 </tr>
                 <tr>
                     <td align="right" nowrap="nowrap"><?php echo $AppUI->_('Update Date');?>:</td>
-                    <td class="hilite">
-                        <?php
-                            echo intval( $risk->risk_updated ) ? $AppUI->formatTZAwareTime($risk->risk_updated, $format) : '-';
-                        ?>
-                    </td>
+                    <?php echo $htmlHelper->createCell('risk_updated', $obj->risk_updated); ?>
                 </tr>
             </table>
         </td>
@@ -154,9 +149,7 @@ function delIt(){
                     </td>
                 </tr>
                 <tr>
-                    <td class="hilite">
-                        <?php echo w2p_textarea($risk->risk_description); ?>
-                    </td>
+                    <?php echo $htmlHelper->createCell('risk_description', $obj->risk_description); ?>
                 </tr>
             </table>
         </td>

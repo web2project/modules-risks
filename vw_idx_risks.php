@@ -18,8 +18,6 @@ $fields = $module->loadSettings('risks', 'index_list');
 $fieldList = array_keys($fields);
 $fieldNames = array_values($fields);
 
-$htmlHelper = new w2p_Output_HTMLHelper($AppUI);
-
 $riskProbability = w2PgetSysVal( 'RiskProbability' );
 $riskImpact = w2PgetSysVal( 'RiskImpact' );
 $riskStatus = w2PgetSysVal( 'RiskStatus' );
@@ -30,14 +28,17 @@ $customLookups = array('risk_probability' => $riskProbability,
 
 <table width="100%" border="0" cellpadding="2" cellspacing="1" class="tbl list">
     <?php
+    echo '<tr>';
     foreach ($fieldNames as $index => $name) { ?>
         <th nowrap="nowrap">
             <?php echo $AppUI->_($fieldNames[$index]); ?>
         </th>
     <?php }
-
+    echo '</tr>';
 
     $prev_project = -1;
+    $htmlHelper = new w2p_Output_HTMLHelper($AppUI);
+
     foreach ($risks as $row) {
         if ($prev_project != (int) $row['project_id']) {
             echo '<tr><td colspan="15" style="background-color:#' . $row['project_color_identifier'] . '">
