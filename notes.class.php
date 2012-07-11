@@ -28,6 +28,25 @@ class CRisk_Note extends w2p_Core_BaseObject {
         return (count($this->_error)) ? false : true;
     }
 
+    public function loadAll($order = null, $where = null) {
+        $q = $this->_getQuery();
+        $q->addTable($this->_tbl, 'r');
+        if ($order) {
+            $q->addOrder($order);
+        }
+        if ($where) {
+            $q->addWhere($where);
+        }
+
+        $q->addQuery('r.*');
+        $q->addQuery('contact_display_name as risk_note_creator');
+        $q->leftJoin('users', 'u', 'risk_note_creator = user_id');
+        $q->leftJoin('contacts', 'c', 'user_contact = contact_id');
+
+        $result = $q->loadHashList($this->_tbl_key);
+
+        return $result;
+    }
     protected function hook_preStore() {
 
         $q = $this->_getQuery();

@@ -114,8 +114,12 @@ class CSetupRisks extends w2p_Core_Setup
                     'risk_impact', 'risk_owner', 'risk_status', 'risk_mitigation_date');
                 $fieldNames = array('Name', 'Priority', 'Related Task', 'Probability',
                     'Impact', 'Owner', 'Status', 'Mitigation Date');
-
                 $module->storeSettings('risks', 'index_list', $fieldList, $fieldNames);
+
+                $fieldList = array('risk_note_date', 'risk_note_creator', 'risk_note_description');
+                $fieldNames = array('Date', 'User', 'Note');
+                $module->storeSettings('risks', 'risk_view_notes', $fieldList, $fieldNames);
+            case '2.0':                                         //current version
             default:
 				//do nothing
 		}

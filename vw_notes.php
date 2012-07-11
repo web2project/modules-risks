@@ -9,28 +9,33 @@ if (!$canView) {
 	$AppUI->redirect("m=public&a=access_denied");
 }
 
-$note = new CRisk_Note();
+$module = new w2p_Core_Module();
+$fields = $module->loadSettings('risks', 'risk_view_notes');
+$fieldList = array_keys($fields);
+$fieldNames = array_values($fields);
 
-$notes = $note->loadAll($order, 'risk_note_risk = '. $risk_id);
-$df = $AppUI->getPref('SHDATEFORMAT');
-$tf = $AppUI->getPref('TIMEFORMAT');
+$note = new CRisk_Note();
+$items = $note->loadAll('risk_note_date', 'risk_note_risk = '. $risk_id);
 
 ?>
-<table cellpadding="5" width="100%" class="tbl">
-    <tr>
-        <th><?php echo $AppUI->_('Date'); ?></th>
-        <th><?php echo $AppUI->_('User'); ?></th>
-        <th><?php echo $AppUI->_('Note'); ?></th>
-    </tr>
-    <?php foreach($notes as $note) { ?>
-    <tr>
-        <td nowrap>
-            <?php echo $AppUI->formatTZAwareTime($note['risk_note_date'], $df . ' ' . $tf); ?>
-        </td>
-        <td nowrap><?php echo $note['risk_note_owner']; ?></td>
-        <td width="100%">
-            <?php echo w2p_textarea($note['risk_note_description']); ?>
-        </td>
-    </tr>
-    <?php } ?>
+<table cellpadding="5" width="100%" class="tbl list">
+    <?php
+    echo '<tr>';
+    foreach ($fieldNames as $index => $name) { ?>
+        <th nowrap="nowrap">
+            <?php echo $AppUI->_($fieldNames[$index]); ?>
+        </th>
+    <?php }
+    echo '</tr>';
+
+    $htmlHelper = new w2p_Output_HTMLHelper($AppUI);
+    foreach($items as $row) {
+        $htmlHelper->stageRowData($row);
+
+        echo '<tr>';        
+        foreach ($fieldList as $index => $column) {
+            echo $htmlHelper->createCell($fieldList[$index], $row[$fieldList[$index]], $customLookups);
+        }
+        echo '</tr>';
+    } ?>
 </table>
