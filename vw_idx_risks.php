@@ -7,10 +7,9 @@ global $AppUI, $task_id, $tab;
 
 $project_id = (int) w2PgetParam($_GET, 'project_id', 0);
 
-$tab--;
-
+$tab = ($m == 'risks') ? $tab-1 : -1;
 $risk = new CRisk();
-$risks = $risk->getRisksByProject($project_id, $tab--);
+$risks = $risk->getRisksByProject($project_id, $tab);
 
 $module = new w2p_Core_Module();
 $fields = $module->loadSettings('risks', 'index_list');
