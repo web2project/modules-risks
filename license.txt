@@ -1,7 +1,6 @@
-The Risk Management Module was built by CaseySoftware, LLC and is 
-released here under the Clear BSD license
+The Risk Management Module was built by CaseySoftware, LLC and is released here under the Clear BSD license
 
-Copyright (c) 2004-2011 CaseySoftware, LLC <webmaster@caseysoftware.com>
+Copyright (c) 2004-2013 CaseySoftware, LLC <webmaster@caseysoftware.com>
 
 Special credit and acknowledgement goes to:
 
