@@ -20,7 +20,8 @@ $config['permissions_item_field'] = 'risk_id';
 $config['permissions_item_label'] = 'risk_name';
 
 $config['requirements'] = array(
-    array('require' => 'web2project',   'comparator' => '>=', 'version' => '3')
+    array('require' => 'web2project',   'comparator' => '>=', 'version' => '3'),
+    array('require' => 'php',   'comparator' => '>=', 'version' => '5.2'),
 );
 
 class CSetupRisks extends w2p_Core_Setup
