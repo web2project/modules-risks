@@ -12,7 +12,7 @@ COMPATIBLE VERSIONS
 
 =====================================
 
-*  This module has been validated to work with web2project v3.0-pre and above and is known to be incompatible with earlier releases.
+*  v2.0+ of this module has been validated to work with web2project v3.0-pre and above and is known to be incompatible with earlier releases.
 
 *  If you are using any version of web2project prior to this, please upgrade as soon as possible to address various security, usability, and functionality issues.
 
