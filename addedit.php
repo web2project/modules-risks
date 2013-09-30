@@ -10,7 +10,7 @@ $item->risk_id = $item_id;
 
 $canEdit = ($item_id) ? $item->canEdit() : $item->canCreate();
 if (!$canEdit) {
-	$AppUI->redirect('m=public&a=access_denied');
+	$AppUI->redirect(ACCESS_DENIED);
 }
 
 $obj = $AppUI->restoreObject();

@@ -5,7 +5,7 @@ if (!defined('W2P_BASE_DIR')) {
 
 $perms = & $AppUI->acl();
 if (!$perms->checkModuleItem($m, 'access')) {
-    $AppUI->redirect('m=public&a=access_denied');
+    $AppUI->redirect(ACCESS_DENIED);
 }
 
 $tab = $AppUI->processIntState('risksIdxTab', $_GET, 'tab', 0);
