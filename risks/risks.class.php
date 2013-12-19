@@ -79,15 +79,15 @@ class CRisk extends w2p_Core_BaseObject {
             $q->addWhere('r.risk_status = ' . $status);
         }
 
-        $q->addQuery('p.project_id, p.project_name, p.project_color_identifier, p.project_company');
-        $q->leftJoin('projects', 'p', 'p.project_id = r.risk_project');
+        $q->addQuery('pr.project_id, pr.project_name, pr.project_color_identifier, pr.project_company');
+        $q->leftJoin('projects', 'pr', 'pr.project_id = r.risk_project');
 
         $q->addQuery('contact_display_name as risk_owner');
         $q->leftJoin('users', 'u', 'risk_owner = user_id');
         $q->leftJoin('contacts', 'c', 'user_contact = contact_id');
 
         $projObj = new CProject();
-        $projObj->setAllowedSQL($this->_AppUI->user_id, $q, null, 'p');
+        $projObj->setAllowedSQL($this->_AppUI->user_id, $q, null, 'pr');
         if ($project_id > 0 && $this->_perms->checkModuleItem('projects', 'view', $project_id)) {
             $q->addWhere("r.risk_project = $project_id");
         }
