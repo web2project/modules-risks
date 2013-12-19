@@ -65,7 +65,7 @@ class CSetupRisks extends w2p_Core_Setup
 		$q->exec();
 
         $i = 0;
-        $impacts = array('Not Specified', 'Low', 'Medium', 'High', 'Super High');
+        $impacts = array('Not Specified', 'Low', 'Normal', 'High', 'Super High');
         foreach ($impacts as $impact) {
             $q->clear();
             $q->addTable('sysvals');
@@ -78,7 +78,7 @@ class CSetupRisks extends w2p_Core_Setup
         }
 
         $i = 0;
-        $probabilities = array('Not Specified', 'Low', 'Medium', 'High');
+        $probabilities = array('Not Specified', 'Low', 'Normal', 'High');
         foreach ($probabilities as $probability) {
             $q->clear();
             $q->addTable('sysvals');
@@ -98,6 +98,19 @@ class CSetupRisks extends w2p_Core_Setup
             $q->addInsert('sysval_key_id', 1);
             $q->addInsert('sysval_title', 'RiskStatus');
             $q->addInsert('sysval_value', $status);
+            $q->addInsert('sysval_value_id', $i);
+            $q->exec();
+            $i++;
+        }
+
+        $i = 0;
+        $priorities = array('Not Specified', 'Low', 'Normal', 'High', 'Super High');
+        foreach ($priorities as $priority) {
+            $q->clear();
+            $q->addTable('sysvals');
+            $q->addInsert('sysval_key_id', 1);
+            $q->addInsert('sysval_title', 'RiskPriority');
+            $q->addInsert('sysval_value', $priority);
             $q->addInsert('sysval_value_id', $i);
             $q->exec();
             $i++;
