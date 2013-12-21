@@ -18,7 +18,7 @@ $note = new CRisk_Note();
 $items = $note->loadAll('risk_note_date', 'risk_note_risk = '. $risk_id);
 
 ?>
-<table cellpadding="5" width="100%" class="tbl list">
+<table cellpadding="5" width="100%" class="tbl list risknotes">
     <?php
     echo '<tr>';
     foreach ($fieldNames as $index => $name) { ?>

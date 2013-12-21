@@ -9,3 +9,7 @@
 ._probability, ._impact {
     text-align: center;
 }
+
+.risknotes ._date, .risknotes ._creator {
+    width: 5%;
+}

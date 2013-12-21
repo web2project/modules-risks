@@ -74,6 +74,8 @@ function delIt(){
     <input type="hidden" name="risk_id" value="<?php echo $risk_id; ?>" />
 </form>
 
+<link rel="stylesheet" type="text/css" href="./modules/risks/risks.css" />
+
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="std view">
     <tr>
         <td width="50%">
