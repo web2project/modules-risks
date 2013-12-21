@@ -20,7 +20,9 @@ $fieldNames = array_values($fields);
 $riskProbability = w2PgetSysVal( 'RiskProbability' );
 $riskImpact = w2PgetSysVal( 'RiskImpact' );
 $riskStatus = w2PgetSysVal( 'RiskStatus' );
-$customLookups = array('risk_probability' => $riskProbability, 
+$riskPriority = w2PgetSysVal('RiskPriority');
+
+$customLookups = array('risk_probability' => $riskProbability, 'risk_priority' => $riskPriority,
     'risk_impact' => $riskImpact, 'risk_status' => $riskStatus);
 ?>
 <link rel="stylesheet" type="text/css" href="./modules/risks/risks.css" />

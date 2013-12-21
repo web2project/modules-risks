@@ -103,8 +103,8 @@ class CSetupRisks extends w2p_Core_Setup
             $i++;
         }
 
-        $i = 0;
-        $priorities = array('Not Specified', 'Low', 'Normal', 'High', 'Super High');
+        $i = -1;
+        $priorities = array('Low', 'Normal', 'High', 'Super High');
         foreach ($priorities as $priority) {
             $q->clear();
             $q->addTable('sysvals');
@@ -171,6 +171,11 @@ class CSetupRisks extends w2p_Core_Setup
 		$q->clear();
 		$q->setDelete('sysvals');
 		$q->addWhere("sysval_title = 'RiskStatus'");
+        $q->exec();
+
+        $q->clear();
+        $q->setDelete('sysvals');
+        $q->addWhere("sysval_title = 'RiskPriority'");
         $q->exec();
 
         return parent::remove();
