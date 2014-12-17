@@ -3,7 +3,7 @@ if (!defined('W2P_BASE_DIR')) {
     die('You should not access this file directly.');
 }
 
-global $AppUI, $task_id, $tab;
+global $AppUI, $task_id, $tab, $m;
 
 $project_id = (int) w2PgetParam($_GET, 'project_id', 0);
 
