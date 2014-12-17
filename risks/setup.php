@@ -24,7 +24,7 @@ $config['requirements'] = array(
     array('require' => 'php',   'comparator' => '>=', 'version' => '5.2'),
 );
 
-class CSetupRisks extends w2p_Core_Setup
+class CSetupRisks extends w2p_System_Setup
 {
     public function install()
     {
