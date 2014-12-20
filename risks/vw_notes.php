@@ -9,7 +9,7 @@ if (!$canView) {
 	$AppUI->redirect("m=public&a=access_denied");
 }
 
-$module = new w2p_Core_Module();
+$module = new w2p_System_Module();
 $fields = $module->loadSettings('risks', 'risk_view_notes');
 $fieldList = array_keys($fields);
 $fieldNames = array_values($fields);

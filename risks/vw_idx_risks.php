@@ -11,7 +11,7 @@ $tab = ($m == 'risks') ? $tab-1 : -1;
 $risk = new CRisk();
 $risks = $risk->getRisksByProject($project_id, $tab);
 
-$module = new w2p_Core_Module();
+$module = new w2p_System_Module();
 $fields = $module->loadSettings('risks', 'index_list');
 
 $fieldList = array_keys($fields);
