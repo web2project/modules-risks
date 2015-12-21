@@ -21,8 +21,6 @@ It does not conform to the Project Management Book of Knowledge (PMBOK)'s Risk M
 
 ## Install
 
-=====================================
-
 1.  To install this module, please follow the standard module installation procedure.  Download the latest version from SourceForge and unzip this directory into your web2project/modules directory or (as of web2project v2.2) you can upload the zip file via the System Admin.
 1.  Select to System Admin -> View Modules and you should see "Risks" near the bottom of the list.
 1.  On the "Risks" row, select "install".  The screen should refresh.  Now select "hidden" and then "disabled" to make it display in your module navigation.
